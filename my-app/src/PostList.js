@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import "./PostList.css";
 import PostItem from "./PostItem";
 
 // 动态组件的定义
@@ -11,6 +12,7 @@ class PostList extends Component {
         };
         this.timer = null;
         this.handleVote = this.handleVote.bind(this); //手动绑定方法this的指向
+        this.handleSave = this.handleSave.bind(this);
     }
 
     componentDidMount () {
@@ -44,15 +46,28 @@ class PostList extends Component {
         });
     }
 
+    handleSave(post){
+        //根据帖子ID，过滤出当前要更新的post
+        const posts = this.state.posts.map(item => {
+            const newItem = item.id === post.id ? post : item;
+            return newItem;
+        })
+        this.setState({
+            posts
+        })
+    }
+
     render() {
         return (
-            <div>
-                帖子列表：
+            <div className="container">
+                <h2>帖子列表：</h2>
                 <ul>
                     {this.state.posts.map(item =>
                         <PostItem
+                            key = {item.id}
                             post = {item}
                             onVote = {this.handleVote}
+                            onSave = {this.handleSave}
                         />
                     )}
                 </ul>
